@@ -7,39 +7,40 @@
     <title>Ролевая Грань - Главная</title>
 </head>
 
-<body>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh;">
 
     <h1>Привет!</h1>
 
+    <button onclick="authenticateWithTelegram()">Авторизоваться в Telegram</button>
+
     <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="bot338_bot" data-size="large"
         data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropbox/11.0.0/Dropbox-sdk.min.js"></script>
     <script type="text/javascript">
-        function onTelegramAuth(user) {
-            alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
-            
-            // Вызываем функцию uploadToDropbox() после успешной аутентификации в Telegram
-            uploadToDropbox();
+        function authenticateWithTelegram() {
+            var telegramButton = document.querySelector('[data-telegram-login]');
+            telegramButton.click();
         }
 
-        function uploadToDropbox() {
-            var ACCESS_TOKEN = 'sl.B1G0ywjD3vmmb05CElTwwmo_ZOA0LheEPOB7q8Ed69gY3_aIA2pH-Ii1PmU_FRFA5ni9dFfanBqUxl6erRZil9jbeCbmxLZ-bdHnV6rmptE-wqSFUulwiW2yQ6M_KzPrCrQurG7z-bbjpcu2G3TzfJc';
-            var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
+        function onTelegramAuth(user) {
+            alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
 
-            var fileContent = "Hello, this is a test content.";
-            var fileName = '/test_upload.txt';
+            // Отправить сообщение от бота в Telegram
+            sendMessageToTelegramBot(user.id);
 
-            dbx.filesUpload({
-                path: fileName,
-                contents: fileContent,
-                mode: 'overwrite'
-            }).then(function (response) {
-                console.log(response);
-                alert('File uploaded to Dropbox successfully!');
-            }).catch(function (error) {
-                console.error(error);
-                alert('Failed to upload file to Dropbox!');
-            });
+            // Выполнить Python-код
+            executePythonCode();
+        }
+
+        function sendMessageToTelegramBot(userId) {
+            // AJAX запрос на отправку сообщения
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://api.telegram.org/botYOUR_BOT_TOKEN/sendMessage?chat_id=" + userId + "&text=Сообщение от бота");
+            xhr.send();
+        }
+
+        function executePythonCode() {
+            // Ваш Python-код здесь
+            alert('Python код будет выполнен');
         }
     </script>
 
