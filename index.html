@@ -1,24 +1,38 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ролевая Грань - Главная</title>
 </head>
-
 <body>
-
     <h1>Привет!</h1>
+    <button onclick="openTelegramLogin()">Telegram Login</button>
 
-    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="bot338_bot" data-size="large"
-        data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
-    <script type="text/javascript">
+    <script>
+        function openTelegramLogin() {
+            window.open("https://telegram.org/js/telegram-widget.js?22");
+        }
+        
+        // Обработка данных пользователя после авторизации
         function onTelegramAuth(user) {
-            alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
+            // Сохраняем данные пользователя в localStorage
+            localStorage.setItem('telegram_user', JSON.stringify(user));
+            // Перезагружаем страницу или выполняем другие действия
+            location.reload();
+        }
+
+        // Проверяем, есть ли данные пользователя в localStorage
+        window.onload = function() {
+            var userData = localStorage.getItem('telegram_user');
+            if (userData) {
+                // Парсим JSON и выводим данные
+                userData = JSON.parse(userData);
+                var greeting = document.createElement('p');
+                greeting.textContent = 'Привет, ' + userData.first_name + ' ' + userData.last_name + '!';
+                document.body.appendChild(greeting);
+            }
         }
     </script>
-
 </body>
-
 </html>
